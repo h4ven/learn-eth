@@ -1,5 +1,5 @@
 const { ethers } = require("ethers");
-const {ChainId, Token, Fetcher} = require("@uniswap/sdk");
+const {ChainId, Token, WETH, Fetcher} = require("@uniswap/sdk");
 
 const apiKey = process.env.ALCHEMY_API_KEY;
 if (apiKey === undefined) {
@@ -31,5 +31,16 @@ async function getToken(chainId, tokenAddress) {
     return WETH;
 }
 
-const WETH = getToken(ChainId.MAINNET, "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2");
-WETH.then(token => console.log("WETH: ", token.address));
+const local_WETH = getToken(ChainId.MAINNET, "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2");
+local_WETH.then(token => console.log("WETH: ", token.address));
+
+// WETH is also exported by the Uniswap SDK so we will use that instead
+
+// get Uniswap pairs
+async function getPair(token1, token2) {
+    const pair = await Fetcher.fetchPairData(token1, token2, remoteProvider);
+    return pair;
+}
+
+const pair = getPair(DAI, WETH[DAI.chainId]);
+pair.then(pair => console.log("DAI price: ", pair.token0Price.toSignificant(6), ", WETH price: ", pair.token1Price.toSignificant(6)));

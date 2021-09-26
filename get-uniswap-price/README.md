@@ -32,7 +32,8 @@ $ set ALCHEMY_API_KEY=...
 Run with `node`,
 
 ```bat
-$ node index.js
+$ node get_token.js
 DAI:  0x6B175474E89094C44Da98b954EedeAC495271d0F
 WETH:  0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2
+DAI price:  0.000332498 , WETH price:  3007.54
 ```
