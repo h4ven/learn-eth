@@ -58,4 +58,4 @@ async function main() {
     await indirectMidPrice();
 }
 
-main()
+main();
