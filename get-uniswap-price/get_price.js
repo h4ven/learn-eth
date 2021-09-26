@@ -19,7 +19,7 @@ async function getPair(token1, token2) {
     return pair;
 }
 
-async function main() {
+async function midPrice() {
     const daiAddress = "0x6B175474E89094C44Da98b954EedeAC495271d0F";
     const DAI = await getToken(ChainId.MAINNET, daiAddress);
     const pair = await Fetcher.fetchPairData(DAI, WETH[DAI.chainId]);
@@ -32,6 +32,30 @@ async function main() {
     // relative value of one token in terms of the other
     console.log("(WETH -> DAI) mid price: ", route.midPrice.toSignificant(6));
     console.log("(DAI -> WETH) mid price: ", route.midPrice.invert().toSignificant(6));
+}
+
+async function indirectMidPrice() {
+    // useful when we want to trade pairs which don't exist
+    // e.g., assuming DAI/WETH doesn't exist, we could then do:
+    // USDC/WETH + DAI/USDC
+    const daiAddress = "0x6B175474E89094C44Da98b954EedeAC495271d0F";
+    const DAI = await getToken(ChainId.MAINNET, daiAddress);
+
+    const usdcAddress = "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48";
+    const USDC = await getToken(ChainId.MAINNET, usdcAddress);
+
+    const usdcWethPair = await Fetcher.fetchPairData(USDC, WETH[USDC.chainId]);
+    const daiUsdcPair = await Fetcher.fetchPairData(DAI, USDC);
+
+    const route = new Route([usdcWethPair, daiUsdcPair], WETH[ChainId.MAINNET]);
+
+    console.log("(WETH -> USDC -> DAI) mid price: ", route.midPrice.toSignificant(6));
+    console.log("(DAI -> USDC -> WETH) mid price: ", route.midPrice.invert().toSignificant(6));
+}
+
+async function main() {
+    await midPrice();
+    await indirectMidPrice();
 }
 
 main()
