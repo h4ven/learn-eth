@@ -1,5 +1,5 @@
 const { ethers } = require("ethers");
-const {ChainId, Token, WETH, Fetcher} = require("@uniswap/sdk");
+const { ChainId, Token, WETH, Fetcher } = require("@uniswap/sdk");
 
 const apiKey = process.env.ALCHEMY_API_KEY;
 if (apiKey === undefined) {
